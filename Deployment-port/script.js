@@ -1,3 +1,4 @@
+
 // Preloader
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
@@ -228,7 +229,7 @@ tabs.forEach(tab => {
 renderResumeContent('education');
 
 // ============================================
-// CONTACT FORM - EmailJS Integration (FIXED!)
+// CONTACT FORM - FORMSUBMIT.CO (COMPLETE SETUP)
 // ============================================
 const contactForm = document.getElementById('contactForm');
 const formMessage = document.getElementById('formMessage');
@@ -253,38 +254,85 @@ contactForm.addEventListener('submit', (e) => {
     // Show sending message
     showFormMessage('Sending message...', 'success');
 
-    // ✅ CORRECTED: Send email using EmailJS with Gravatar
-    // Generate Gravatar hash from email
-    const generateGravatarUrl = (email) => {
-        // Create MD5 hash of email (simple implementation)
-        const hash = email.toLowerCase().trim();
-        return `https://www.gravatar.com/avatar/${hash}?s=200&d=mp`;
+    // Get device & browser information
+    const browserInfo = navigator.userAgent;
+    const screenSize = `${window.screen.width}x${window.screen.height}`;
+    const timestamp = new Date().toLocaleString();
+    const deviceType = /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile 📱' : 'Desktop 💻';
+    
+    // Detect browser
+    let browserName = 'Unknown';
+    if (browserInfo.includes('Chrome')) browserName = 'Chrome 🌐';
+    else if (browserInfo.includes('Firefox')) browserName = 'Firefox 🦊';
+    else if (browserInfo.includes('Safari')) browserName = 'Safari 🧭';
+    else if (browserInfo.includes('Edge')) browserName = 'Edge 🔷';
+    
+    // Prepare email data with ALL features
+    const emailData = {
+        // ===== MAIN CONTACT INFO =====
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        
+        // ===== FORMSUBMIT SPECIAL FIELDS (with _) =====
+        _replyto: formData.email,  // Reply button → client's email
+        _subject: `🔔 New Portfolio Contact: ${formData.name} - ${formData.subject}`,
+        _template: 'table',  // Beautiful table format
+        _captcha: 'false',   // Disable captcha for smooth UX
+        
+        // ===== AUTO-RESPONSE TO CLIENT =====
+        _autoresponse: `Hi ${formData.name}! 👋\n\nThank you for reaching out through my portfolio. I've received your message about "${formData.subject}" and will get back to you within 24 hours.\n\nBest regards,\nAlfie Lynard S. Polacas\nWeb Developer & Designer\n\n---\nThis is an automated response. Please do not reply to this email.`,
+        
+        // ===== ADDITIONAL TRACKING INFO =====
+        '📱 Device Type': deviceType,
+        '📏 Screen Size': screenSize,
+        '🌐 Browser': browserName,
+        '⏰ Submitted At': timestamp,
+        '🌍 Page URL': window.location.href,
+        '📍 Source': 'Portfolio Contact Form',
+        
+        // ===== OPTIONAL: UNCOMMENT TO USE =====
+        // '_cc': 'backup@email.com',  // Send copy to another email
+        // '_next': 'https://yoursite.com/thank-you.html',  // Redirect after submit
     };
 
-    const gravatarUrl = generateGravatarUrl(formData.email);
-
-    // These variable names MUST MATCH your EmailJS template variables
-    emailjs.send('service_8mvecqc', 'template_v0me48r', {
-        name: formData.name,        // ✅ Changed from 'from_name' to 'name'
-        email: formData.email,      // ✅ Changed from 'from_email' to 'email'
-        subject: formData.subject,  // ✅ This matches
-        message: formData.message,  // ✅ This matches
-        gravatar: gravatarUrl       // ✅ Profile picture URL
-        
+    // Send to FormSubmit
+    fetch('https://formsubmit.co/alfielynard23@gmail.com', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(emailData)
     })
-    .then(() => {
-        showFormMessage('Thank you! Your message has been sent successfully.', 'success');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Success!
+        showFormMessage('✅ Thank you! Your message has been sent successfully. You will receive a confirmation email shortly.', 'success');
         contactForm.reset();
+        
+        // Log success (for debugging)
+        console.log('Form submitted successfully:', data);
+        
+        // Hide message after 7 seconds
         setTimeout(() => {
             formMessage.style.display = 'none';
-        }, 5000);
+        }, 7000);
     })
     .catch((error) => {
-        showFormMessage('Sorry, there was an error sending your message. Please try again.', 'error');
-        console.error('EmailJS Error:', error);
+        // Error handling
+        showFormMessage('❌ Sorry, there was an error sending your message. Please try again or email me directly at alfielynard23@gmail.com', 'error');
+        console.error('FormSubmit Error:', error);
     });
 });
 
+// Show form message function
 const showFormMessage = (message, type) => {
     formMessage.textContent = message;
     formMessage.className = `form-message ${type}`;
@@ -334,4 +382,3 @@ observeElements.forEach(element => {
     element.style.transition = 'all 0.6s ease';
     scrollObserver.observe(element);
 });
-
