@@ -327,7 +327,7 @@ contactForm.addEventListener('submit', (e) => {
     })
     .catch((error) => {
         // Error handling
-        showFormMessage('❌ Sorry, there was an error sending your message. Please try again or email me directly at alfielynard23@gmail.com', 'error');
+        showFormMessage('Sorry, there was an error sending your message. Please try again or email me directly at alfielynard23@gmail.com', 'error');
         console.error('FormSubmit Error:', error);
     });
 });
