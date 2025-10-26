@@ -229,114 +229,57 @@ tabs.forEach(tab => {
 renderResumeContent('education');
 
 // ============================================
-// CONTACT FORM - FORMSUBMIT.CO (COMPLETE SETUP)
+// SUCCESS MESSAGE HANDLER (Web3Forms)
 // ============================================
-const contactForm = document.getElementById('contactForm');
-const formMessage = document.getElementById('formMessage');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-    };
-
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-        showFormMessage('Please enter a valid email address', 'error');
-        return;
-    }
-
-    // Show sending message
-    showFormMessage('Sending message...', 'success');
-
-    // Get device & browser information
-    const browserInfo = navigator.userAgent;
-    const screenSize = `${window.screen.width}x${window.screen.height}`;
-    const timestamp = new Date().toLocaleString();
-    const deviceType = /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile 📱' : 'Desktop 💻';
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const formMessage = document.getElementById('formMessage');
     
-    // Detect browser
-    let browserName = 'Unknown';
-    if (browserInfo.includes('Chrome')) browserName = 'Chrome 🌐';
-    else if (browserInfo.includes('Firefox')) browserName = 'Firefox 🦊';
-    else if (browserInfo.includes('Safari')) browserName = 'Safari 🧭';
-    else if (browserInfo.includes('Edge')) browserName = 'Edge 🔷';
-    
-    // Prepare email data with ALL features
-    const emailData = {
-        // ===== MAIN CONTACT INFO =====
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
+    if (urlParams.get('success') === 'true' && formMessage) {
+        // Show success message
+        formMessage.textContent = '✅ Thank you! Your message has been sent successfully. I will get back to you within 24 hours.';
+        formMessage.className = 'form-message success';
+        formMessage.style.display = 'block';
         
-        // ===== FORMSUBMIT SPECIAL FIELDS (with _) =====
-        _replyto: formData.email,  // Reply button → client's email
-        _subject: `🔔 New Portfolio Contact: ${formData.name} - ${formData.subject}`,
-        _template: 'table',  // Beautiful table format
-        _captcha: 'false',   // Disable captcha for smooth UX
-        
-        // ===== AUTO-RESPONSE TO CLIENT =====
-        _autoresponse: `Hi ${formData.name}! 👋\n\nThank you for reaching out through my portfolio. I've received your message about "${formData.subject}" and will get back to you within 24 hours.\n\nBest regards,\nAlfie Lynard S. Polacas\nWeb Developer & Designer\n\n---\nThis is an automated response. Please do not reply to this email.`,
-        
-        // ===== ADDITIONAL TRACKING INFO =====
-        '📱 Device Type': deviceType,
-        '📏 Screen Size': screenSize,
-        '🌐 Browser': browserName,
-        '⏰ Submitted At': timestamp,
-        '🌍 Page URL': window.location.href,
-        '📍 Source': 'Portfolio Contact Form',
-        
-        // ===== OPTIONAL: UNCOMMENT TO USE =====
-        // '_cc': 'backup@email.com',  // Send copy to another email
-        // '_next': 'https://yoursite.com/thank-you.html',  // Redirect after submit
-    };
-
-    // Send to FormSubmit
-    fetch('https://formsubmit.co/alfielynard23@gmail.com', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(emailData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Success!
-        showFormMessage('✅ Thank you! Your message has been sent successfully. You will receive a confirmation email shortly.', 'success');
-        contactForm.reset();
-        
-        // Log success (for debugging)
-        console.log('Form submitted successfully:', data);
+        // Scroll to contact section
+        setTimeout(() => {
+            document.getElementById('contact').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 100);
         
         // Hide message after 7 seconds
         setTimeout(() => {
             formMessage.style.display = 'none';
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
         }, 7000);
-    })
-    .catch((error) => {
-        // Error handling
-        showFormMessage('Sorry, there was an error sending your message. Please try again or email me directly at alfielynard23@gmail.com', 'error');
-        console.error('FormSubmit Error:', error);
-    });
+    }
 });
 
-// Show form message function
+// ============================================
+// FORM SUBMISSION HANDLER (Optional Enhancement)
+// ============================================
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', function() {
+        const submitBtn = this.querySelector('.submit-btn');
+        if (submitBtn) {
+            submitBtn.textContent = 'SENDING...';
+            submitBtn.disabled = true;
+        }
+    });
+}
+
+// Show form message function (for future use)
 const showFormMessage = (message, type) => {
-    formMessage.textContent = message;
-    formMessage.className = `form-message ${type}`;
-    formMessage.style.display = 'block';
+    const formMessage = document.getElementById('formMessage');
+    if (formMessage) {
+        formMessage.textContent = message;
+        formMessage.className = `form-message ${type}`;
+        formMessage.style.display = 'block';
+    }
 };
 
 // Back to Top Button
