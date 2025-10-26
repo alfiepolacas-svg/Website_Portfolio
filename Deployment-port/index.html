@@ -311,63 +311,50 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="section-title">
-            <p class="section-subtitle">GET IN TOUCH</p>
-            <h2>Contact Me</h2>
+<section class="contact" id="contact">
+    <div class="section-title">
+        <p class="section-subtitle">GET IN TOUCH</p>
+        <h2>Contact Me</h2>
+    </div>
+    
+    <!-- UPDATED FORM - Traditional HTML submission -->
+    <form 
+        action="https://formsubmit.co/alfielynard23@gmail.com" 
+        method="POST" 
+        class="contact-form"
+    >
+        <!-- FormSubmit Configuration -->
+        <input type="hidden" name="_subject" value="🔔 New Portfolio Contact">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://website-portfolio-murex-eight.vercel.app">
+        
+        <!-- Honeypot -->
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+        <div class="form-group">
+            <label for="name">YOUR NAME</label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
         </div>
-        <form class="contact-form" id="contactForm" novalidate>
-            <div class="form-group">
-                <label for="name">YOUR NAME</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Your Name"
-                    required
-                    aria-required="true"
-                />
-            </div>
-            <div class="form-group">
-                <label for="email">EMAIL</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="your.email@example.com"
-                    required
-                    aria-required="true"
-                />
-            </div>
-            <div class="form-group">
-                <label for="subject">SUBJECT</label>
-                <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    placeholder="Subject"
-                    required
-                    aria-required="true"
-                />
-            </div>
-            <div class="form-group">
-                <label for="message">YOUR MESSAGE</label>
-                <textarea
-                    id="message"
-                    name="message"
-                    placeholder="Your Message"
-                    required
-                    aria-required="true"
-                ></textarea>
-            </div>
-            
-            <!-- Honeypot field for spam protection (hidden from users) -->
-            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-            
-            <button type="submit" class="submit-btn">SEND MESSAGE</button>
-            <div class="form-message" id="formMessage" role="alert"></div>
-        </form>
-    </section>
+        
+        <div class="form-group">
+            <label for="email">EMAIL</label>
+            <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">SUBJECT</label>
+            <input type="text" id="subject" name="subject" placeholder="Subject" required />
+        </div>
+        
+        <div class="form-group">
+            <label for="message">YOUR MESSAGE</label>
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">SEND MESSAGE</button>
+    </form>
+</section>
 
     <!-- Footer -->
     <footer>
