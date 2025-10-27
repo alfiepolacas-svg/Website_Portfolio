@@ -1,40 +1,30 @@
-
-// Preloader
+// ==================== PRELOADER ====================
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     setTimeout(() => {
         preloader.style.opacity = '0';
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
+        setTimeout(() => preloader.style.display = 'none', 500);
     }, 1000);
 });
 
-// Navigation
+// ==================== NAVIGATION ====================
 const navbar = document.getElementById('navbar');
 const mobileToggle = document.getElementById('mobileToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('nav ul li a');
 
-// Mobile menu toggle
 mobileToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
 });
 
-// Close mobile menu when clicking a link
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('active');
     });
 });
 
-// Navbar scroll effect
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
 });
 
 // Smooth scroll
@@ -43,21 +33,18 @@ navLinks.forEach(link => {
         e.preventDefault();
         const targetId = link.getAttribute('href');
         if (targetId.startsWith('#')) {
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            const target = document.querySelector(targetId);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
         }
     });
 });
 
-// Active nav link on scroll
+// Active nav link
 const sections = document.querySelectorAll('section[id]');
 window.addEventListener('scroll', () => {
     let current = '';
     sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (window.pageYOffset >= sectionTop - 200) {
+        if (window.pageYOffset >= section.offsetTop - 200) {
             current = section.getAttribute('id');
         }
     });
@@ -69,7 +56,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Counter Animation
+// ==================== COUNTER ANIMATION ====================
 const counters = document.querySelectorAll('.count');
 let counterAnimated = false;
 
@@ -95,20 +82,16 @@ const animateCounters = () => {
     counterAnimated = true;
 };
 
-const statsSection = document.querySelector('.stats');
 const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateCounters();
-        }
+        if (entry.isIntersecting) animateCounters();
     });
 }, { threshold: 0.5 });
 
-if (statsSection) {
-    statsObserver.observe(statsSection);
-}
+const statsSection = document.querySelector('.stats');
+if (statsSection) statsObserver.observe(statsSection);
 
-// Portfolio Filter
+// ==================== PORTFOLIO FILTER ====================
 const filterButtons = document.querySelectorAll('.filter-btn');
 const portfolioCards = document.querySelectorAll('.portfolio-card');
 
@@ -129,22 +112,20 @@ filterButtons.forEach(button => {
             } else {
                 card.style.opacity = '0';
                 card.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    card.style.display = 'none';
-                }, 300);
+                setTimeout(() => card.style.display = 'none', 300);
             }
         });
     });
 });
 
-// Resume Data
+// ==================== RESUME ====================
 const resumeData = {
     education: [
         {
             year: '2023',
             title: 'Bachelor of Science in Information Technology',
             subtitle: 'Cor Jesu College - (2023 - 2027)',
-            description: 'Currently pursuing BSIT with focus on web development, software engineering, and database management systems.'
+            description: 'Currently pursuing BSIT with focus on web development, software engineering, and database management.'
         },
         {
             year: '2019',
@@ -184,7 +165,7 @@ const resumeData = {
             year: '2024',
             title: 'Freelance Web Developer',
             subtitle: 'Self-Employed - (2024 - Present)',
-            description: 'Providing web development services to clients. Building custom solutions and maintaining existing projects.'
+            description: 'Providing web development services to clients. Building custom solutions and maintaining projects.'
         },
         {
             year: '2023',
@@ -195,15 +176,12 @@ const resumeData = {
     ]
 };
 
-// Resume Tabs
 const tabs = document.querySelectorAll('.tab');
 const resumeContent = document.getElementById('resumeContent');
 
 const renderResumeContent = (category) => {
-    const data = resumeData[category];
     resumeContent.innerHTML = '';
-
-    data.forEach((item, index) => {
+    resumeData[category].forEach(item => {
         const card = document.createElement('div');
         card.className = 'resume-card';
         card.innerHTML = `
@@ -220,48 +198,17 @@ tabs.forEach(tab => {
     tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        const category = tab.getAttribute('data-tab');
-        renderResumeContent(category);
+        renderResumeContent(tab.getAttribute('data-tab'));
     });
 });
 
-// Initialize with education tab
 renderResumeContent('education');
 
-// ============================================
-// SUCCESS MESSAGE HANDLER (Web3Forms)
-// ============================================
-window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const formMessage = document.getElementById('formMessage');
-    
-    if (urlParams.get('success') === 'true' && formMessage) {
-        // Show success message
-        formMessage.textContent = '✅ Thank you! Your message has been sent successfully. I will get back to you within 24 hours.';
-        formMessage.className = 'form-message success';
-        formMessage.style.display = 'block';
-        
-        // Scroll to contact section
-        setTimeout(() => {
-            document.getElementById('contact').scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }, 100);
-        
-        // Hide message after 7 seconds
-        setTimeout(() => {
-            formMessage.style.display = 'none';
-            // Clean URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }, 7000);
-    }
-});
-
-// ============================================
-// FORM SUBMISSION HANDLER (Optional Enhancement)
-// ============================================
+// ==================== CONTACT FORM - WEB3FORMS ====================
 const contactForm = document.getElementById('contactForm');
+const formMessage = document.getElementById('formMessage');
+
+// Handle form submission
 if (contactForm) {
     contactForm.addEventListener('submit', function() {
         const submitBtn = this.querySelector('.submit-btn');
@@ -272,32 +219,41 @@ if (contactForm) {
     });
 }
 
-// Show form message function (for future use)
-const showFormMessage = (message, type) => {
-    const formMessage = document.getElementById('formMessage');
-    if (formMessage) {
-        formMessage.textContent = message;
-        formMessage.className = `form-message ${type}`;
+// Handle success redirect
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.get('success') === 'true' && formMessage) {
+        formMessage.textContent = '✅ Thank you! Your message has been sent successfully. I will get back to you within 24 hours.';
+        formMessage.className = 'form-message success';
         formMessage.style.display = 'block';
+        
+        setTimeout(() => {
+            document.getElementById('contact').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 100);
+        
+        setTimeout(() => {
+            formMessage.style.display = 'none';
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }, 7000);
     }
-};
+});
 
-// Back to Top Button
+// ==================== BACK TO TOP ====================
 const backToTopBtn = document.getElementById('backToTop');
 
 window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        backToTopBtn.classList.add('show');
-    } else {
-        backToTopBtn.classList.remove('show');
-    }
+    backToTopBtn.classList.toggle('show', window.pageYOffset > 300);
 });
 
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// Scroll Progress Bar
+// ==================== SCROLL PROGRESS ====================
 const scrollProgress = document.getElementById('scrollProgress');
 
 window.addEventListener('scroll', () => {
@@ -307,7 +263,7 @@ window.addEventListener('scroll', () => {
     scrollProgress.style.width = scrollPercent + '%';
 });
 
-// Initialize animations
+// ==================== SCROLL ANIMATIONS ====================
 const observeElements = document.querySelectorAll('.service-card, .portfolio-card, .testimonial-card');
 
 const scrollObserver = new IntersectionObserver((entries) => {
