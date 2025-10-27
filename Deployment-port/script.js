@@ -224,7 +224,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     
     if (urlParams.get('success') === 'true' && formMessage) {
-        formMessage.textContent = '✅ Thank you! Your message has been sent successfully. I will get back to you within 24 hours.';
+        formMessage.textContent = 'Thank you! Your message has been sent successfully. I will get back to you within 24 hours.';
         formMessage.className = 'form-message success';
         formMessage.style.display = 'block';
         
@@ -281,3 +281,4 @@ observeElements.forEach(element => {
     element.style.transition = 'all 0.6s ease';
     scrollObserver.observe(element);
 });
+
